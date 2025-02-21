@@ -13,12 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
     highScoreDisplay.innerText = `High Score: ${highScore}`;
     document.body.appendChild(highScoreDisplay);
 
-    // Start game on keypress or touch
-    document.addEventListener("keypress", startGame);
-    document.addEventListener("touchstart", startGame);
-
-    function startGame() {
+    // Start game on keypress or first tap
+    function startGame(e) {
         if (!started) {
+            e.preventDefault(); // Prevents unwanted behavior on mobile
             started = true;
             level = 0;
             gameSeq = [];
@@ -27,6 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
             levelUp();
         }
     }
+
+    document.addEventListener("keypress", startGame);
+    document.addEventListener("touchstart", startGame, { passive: false }); // Ensures it works on mobile
 
     function gameFlash(btn) {
         btn.classList.add("flash");
@@ -80,7 +81,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function btnPress() {
+    function btnPress(e) {
+        e.preventDefault(); // Prevents mobile double triggering
         let btn = this;
         userFlash(btn);
 
@@ -93,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let allbtns = document.querySelectorAll(".btn");
     for (let btn of allbtns) {
         btn.addEventListener("click", btnPress);
-        btn.addEventListener("touchstart", btnPress); // Add touch event for mobile
+        btn.addEventListener("touchstart", btnPress, { passive: false }); // Ensures touch works correctly
     }
 
     function reset() {
